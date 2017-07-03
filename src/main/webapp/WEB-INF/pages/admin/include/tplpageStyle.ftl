@@ -1,0 +1,2 @@
+<link rel="stylesheet" type="text/css" href="http://cdn.hinplay.com/static/assets/css/public.css" />
+<link rel="stylesheet" type="text/css" href="http://cdn.hinplay.com/static/assets/css/tplpage.css" />

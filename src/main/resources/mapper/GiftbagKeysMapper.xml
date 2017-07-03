@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hinplay.core.dao.GiftbagKeysDao">
+	<!-- 映射结果Map -->
+	<resultMap id="BaseResultMap" type="com.hinplay.core.entity.GiftbagKeys">
+		<id column="kId" property="kid" jdbcType="INTEGER" />
+		<result column="kKey" property="kkey" jdbcType="VARCHAR" />
+		<result column="bId" property="bid" jdbcType="INTEGER" />
+		<result column="uId" property="uid" jdbcType="INTEGER" />
+		<result column="isUsed" property="isused" jdbcType="INTEGER" />
+	</resultMap>
+	<!-- 映射结果和分类表Map -->
+	<resultMap id="ResultWithGiftbagMap" type="com.hinplay.core.entity.GiftbagKeys"
+		extends="BaseResultMap">
+		<collection property="giftbag" javaType="com.hinplay.core.entity.GameGiftbag">
+			<result column="bName" property="bname" jdbcType="VARCHAR" />
+		</collection>
+	</resultMap>
+	<!-- 查询列 -->
+	<sql id="Base_Column_List">
+		a.kId, a.kKey, a.bId, a.uId, a.isUsed
+	</sql>
+	<!-- 查询条件 -->
+	<sql id="selectBycolumn">
+		<if test="kid != null">
+			and a.kId = #{kid,jdbcType=INTEGER}
+		</if>
+		<if test="kkey != null">
+			and a.kKey = #{kkey,jdbcType=VARCHAR}
+		</if>
+		<if test="bid != null">
+			and a.bId = #{bid,jdbcType=INTEGER}
+		</if>
+		<if test="uid != null">
+			and a.uId = #{uid,jdbcType=INTEGER}
+		</if>
+		<if test="isused != null">
+			and a.isUsed = #{isused,jdbcType=INTEGER}
+		</if>
+	</sql>
+	<sql id="orderBy">
+		<if test="orderBy != null">
+			order by a.${orderBy} ASC
+		</if>
+	</sql>
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.hinplay.core.entity.GiftbagKeys">
+		insert into giftbag_keys (kId,
+		kKey, bId,
+		uId, isUsed)
+		values (#{kid,jdbcType=INTEGER},
+		#{kkey,jdbcType=VARCHAR},
+		#{bid,jdbcType=INTEGER},
+		#{uid,jdbcType=INTEGER}, #{isused,jdbcType=INTEGER})
+	</insert>
+	<!-- 新增，判断字段不为空新增 -->
+	<insert id="insertSelective" parameterType="com.hinplay.core.entity.GiftbagKeys">
+		insert into giftbag_keys
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="kid != null">
+				kId,
+			</if>
+			<if test="kkey != null">
+				kKey,
+			</if>
+			<if test="bid != null">
+				bId,
+			</if>
+			<if test="uid != null">
+				uId,
+			</if>
+			<if test="isused != null">
+				isUsed,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="kid != null">
+				#{kid,jdbcType=INTEGER},
+			</if>
+			<if test="kkey != null">
+				#{kkey,jdbcType=VARCHAR},
+			</if>
+			<if test="bid != null">
+				#{bid,jdbcType=INTEGER},
+			</if>
+			<if test="uid != null">
+				#{uid,jdbcType=INTEGER},
+			</if>
+			<if test="isused != null">
+				#{isused,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<!-- 批量新增 -->
+	<insert id="insertBatch" parameterType="java.util.List">
+		insert
+		into giftbag_keys
+		(kKey, bId, uId, isUsed)
+		values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.kkey},#{item.bid},#{item.uid},#{item.isused})
+		</foreach>
+	</insert>
+	<!-- 根据主键删除 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		giftbag_keys
+		where kId = #{kid,jdbcType=INTEGER}
+	</delete>
+	<!-- 根据主键批量删除 -->
+	<delete id="deleteBatchByPrimaryKey" parameterType="java.lang.Integer">
+		DELETE FROM giftbag_keys where kId IN
+		<foreach item="item" collection="array" open="(" separator=","
+			close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<!-- 更新，判断字段不为空修改 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.hinplay.core.entity.GiftbagKeys">
+		update giftbag_keys
+		<set>
+			<if test="kkey != null">
+				kKey = #{kkey,jdbcType=VARCHAR},
+			</if>
+			<if test="bid != null">
+				bId = #{bid,jdbcType=INTEGER},
+			</if>
+			<if test="uid != null">
+				uId = #{uid,jdbcType=INTEGER},
+			</if>
+			<if test="isused != null">
+				isUsed = #{isused,jdbcType=INTEGER},
+			</if>
+		</set>
+		where kId = #{kid,jdbcType=INTEGER}
+	</update>
+	<!-- 查询 -->
+	<select id="selectByPrimary" resultMap="BaseResultMap"
+		parameterType="com.hinplay.common.RequestData">
+		select
+		<include refid="Base_Column_List" />
+		FROM giftbag_keys as a where 1=1
+		<include refid="selectBycolumn" />
+		<include refid="orderBy" />
+	</select>
+	<!-- 查询以及查询分类表 -->
+	<select id="selectWithGiftbagByPrimary" resultMap="ResultWithGiftbagMap"
+		parameterType="com.hinplay.common.RequestData">
+		SELECT
+		<include refid="Base_Column_List" />
+		,
+		b.bName
+		FROM
+		giftbag_keys AS a
+		LEFT JOIN
+		game_giftbag AS b
+		ON
+		a.bId=b.bId
+		where 1=1
+		<include refid="selectBycolumn" />
+		<include refid="orderBy" />
+	</select>
+</mapper>

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hinplay.core.dao.GameCommendDao">
+	<!-- 映射游戏表结果Map -->
+	<resultMap id="GamesResultMap" type="com.hinplay.core.entity.GamesManage">
+		<id column="gId" property="gid" jdbcType="INTEGER" />
+		<result column="cId" property="cid" jdbcType="INTEGER" />
+		<result column="gName" property="gname" jdbcType="VARCHAR" />
+		<result column="gDesc" property="gdesc" jdbcType="VARCHAR" />
+		<result column="gLogo" property="glogo" jdbcType="VARCHAR" />
+		<result column="gPictures" property="gpictures" jdbcType="VARCHAR" />
+		<result column="gPayType" property="gpaytype" jdbcType="INTEGER" />
+		<result column="gScreen" property="gscreen" jdbcType="INTEGER" />
+		<result column="gPlayed" property="gplayed" jdbcType="INTEGER" />
+		<result column="gState" property="gstate" jdbcType="INTEGER" />
+		<result column="gUrl" property="gurl" jdbcType="VARCHAR" />
+		<result column="gRuntimeUrl" property="gruntimeurl" jdbcType="VARCHAR" />
+		<result column="gFirm" property="gfirm" jdbcType="INTEGER" />
+		<result column="gCreate" property="gcreate" jdbcType="TIMESTAMP" />
+		<collection property="gClass" javaType="com.hinplay.core.entity.GameClass">
+			<result column="cName" property="cname" jdbcType="VARCHAR" />
+		</collection>
+	</resultMap>
+	<!-- 映射结果Map -->
+	<resultMap id="BaseResultMap" type="com.hinplay.core.entity.GameCommend">
+		<id column="gId" property="gid" jdbcType="INTEGER" />
+		<result column="gHot" property="ghot" jdbcType="INTEGER" />
+		<result column="gNice" property="gnice" jdbcType="INTEGER" />
+		<result column="gNew" property="gnew" jdbcType="INTEGER" />
+	</resultMap>
+	<!-- 映射结果和游戏表Map -->
+	<resultMap id="ResultWithGameMap" type="com.hinplay.core.entity.GameCommend"
+		extends="BaseResultMap">
+		<collection property="game" resultMap="GamesResultMap" />
+	</resultMap>
+	<!-- 查询列 -->
+	<sql id="Base_Column_List">
+		a.gId, a.gHot, a.gNice, a.gNew
+	</sql>
+	<!-- 连表查询游戏表列 -->
+	<sql id="Linked_Games_List">
+		b.gId, b.cId, b.gName, b.gDesc, b.gLogo, b.gPictures,
+		b.gPayType, b.gScreen, b.gPlayed, b.gState, b.gUrl,
+		b.gRuntimeUrl,
+		b.gFirm, b.gCreate
+	</sql>
+	<!-- 查询条件 -->
+	<sql id="selectBycolumn">
+		<if test="gid != null">
+			and a.gId = #{gid,jdbcType=INTEGER}
+		</if>
+		<if test="ghot != null">
+			and a.gHot = #{ghot,jdbcType=INTEGER}
+		</if>
+		<if test="gnice != null">
+			and a.gNice = #{gnice,jdbcType=VARCHAR}
+		</if>
+		<if test="gnew != null">
+			and a.gNew = #{gnew,jdbcType=INTEGER}
+		</if>
+	</sql>
+	<sql id="selectSetByKey">
+		<!-- 根据 查询 集合里对应记录 -->
+		<if test="findIn != null">
+			and a.gId IN
+			<foreach collection="findIn" item="item" index="index" open="("
+				separator="," close=")">
+				${item}
+			</foreach>
+		</if>
+	</sql>
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.hinplay.core.entity.GameCommend">
+		insert into game_commend (gId,
+		gHot, gNice,
+		gNew)
+		values (#{gid,jdbcType=INTEGER},
+		#{ghot,jdbcType=INTEGER},
+		#{gnice,jdbcType=INTEGER},
+		#{gnew,jdbcType=INTEGER})
+	</insert>
+	<!-- 更新，判断字段不为空修改 -->
+	<insert id="insertSelective" parameterType="com.hinplay.core.entity.GameCommend">
+		insert into game_commend
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="gid != null">
+				gId,
+			</if>
+			<if test="ghot != null">
+				gHot,
+			</if>
+			<if test="gnice != null">
+				gNice,
+			</if>
+			<if test="gnew != null">
+				gNew,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="gid != null">
+				#{gid,jdbcType=INTEGER},
+			</if>
+			<if test="ghot != null">
+				#{ghot,jdbcType=INTEGER},
+			</if>
+			<if test="gnice != null">
+				#{gnice,jdbcType=INTEGER},
+			</if>
+			<if test="gnew != null">
+				#{gnew,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<!-- 根据主键删除 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		game_commend
+		where gId = #{gid,jdbcType=INTEGER}
+	</delete>
+	<!-- 根据主键批量删除 -->
+	<delete id="deleteBatchByPrimaryKey" parameterType="java.lang.Integer">
+		DELETE FROM
+		game_commend where gId IN
+		<foreach item="item" collection="array" open="(" separator=","
+			close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<!-- 更新，判断字段不为空修改 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.hinplay.core.entity.GameCommend">
+		update game_commend
+		<set>
+			<if test="ghot != null">
+				gHot = #{ghot,jdbcType=INTEGER},
+			</if>
+			<if test="gnice != null">
+				gNice = #{gnice,jdbcType=INTEGER},
+			</if>
+			<if test="gnew != null">
+				gNew = #{gnew,jdbcType=INTEGER},
+			</if>
+		</set>
+		where gId = #{gid,jdbcType=INTEGER}
+	</update>
+	<!-- 更新，根据主键批量更新实体类,判断字段不为空修改 -->
+	<update id="updateBatchByPrimaryKeySelective" parameterType="com.hinplay.core.entity.GameCommend">
+		UPDATE game_commend
+		<set>
+			<if test="record.ghot != null">
+				gHot = #{record.ghot,jdbcType=INTEGER},
+			</if>
+			<if test="record.gnice != null">
+				gNice = #{record.gnice,jdbcType=INTEGER},
+			</if>
+			<if test="record.gnew != null">
+				gNew = #{record.gnew,jdbcType=INTEGER},
+			</if>
+		</set>
+		WHERE gId IN
+		<foreach item="item" collection="ids" open="(" separator=","
+			close=")">
+			#{item}
+		</foreach>
+	</update>
+	<!-- 查询 -->
+	<select id="selectByPrimary" resultMap="BaseResultMap"
+		parameterType="com.hinplay.common.RequestData">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM game_commend AS a where 1=1
+		<include refid="selectBycolumn" />
+		<include refid="selectSetByKey" />
+	</select>
+	<!-- 查询游戏表 -->
+	<select id="selectOfGameByPrimary" resultMap="GamesResultMap"
+		parameterType="com.hinplay.common.RequestData">
+		SELECT
+		<include refid="Linked_Games_List" />
+		,
+		c.cName
+		FROM
+		game_commend AS a
+		LEFT JOIN
+		games_manage AS b
+		ON
+		a.gId=b.gId
+		LEFT JOIN
+		game_class as c
+		ON
+		b.cId=c.cId
+		where 1=1
+		<include refid="selectBycolumn" />
+		<include refid="selectSetByKey" />
+	</select>
+	<!-- 查询和游戏表 -->
+	<select id="selectWithGameByPrimary" resultMap="ResultWithGameMap"
+		parameterType="com.hinplay.common.RequestData">
+		SELECT
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Linked_Games_List" />
+		,
+		c.cName
+		FROM
+		game_commend AS a
+		LEFT JOIN
+		games_manage AS b
+		ON
+		a.gId=b.gId
+		LEFT JOIN
+		game_class as c
+		ON
+		b.cId=c.cId
+		where 1=1
+		<include refid="selectBycolumn" />
+		<include refid="selectSetByKey" />
+	</select>
+</mapper>

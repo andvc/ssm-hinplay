@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
+	<context:component-scan base-package="com.hinplay.modules.admin.controller" />
+	<context:component-scan base-package="com.hinplay.modules.support.controller" />
+
+	<!-- 配置返回类型（json） -->
+	<mvc:annotation-driven>
+		<mvc:message-converters register-defaults="true">
+			<!-- 配置Fastjson支持 -->
+			<bean id="fastJsonHttpMessageConverter"
+				class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+				<property name="supportedMediaTypes" value="application/json;charset=UTF-8" />
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+	<!-- 自定义拦截链配置 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<!-- 需要拦截的url -->
+			<mvc:mapping path="/website/admin/*" />
+			<!-- 不拦截的url -->
+			<mvc:exclude-mapping path="/website/admin/login.action" />
+			<mvc:exclude-mapping path="/website/admin/login/post" />
+			<bean class="com.hinplay.modules.admin.interceptor.UsersInterceptor"></bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+	<!-- 启动SpringMVC的注解功能，完成请求和注解POJO的映射 -->
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
+
+	<!-- Freemarker配置 -->
+	<!--<bean id="freemarkerConfiguration"-->
+		<!--class="org.springframework.beans.factory.config.PropertiesFactoryBean">-->
+		<!--<property name="location" value="classpath:freemarker.properties" />-->
+	<!--</bean>-->
+	<!-- 配置freeMarker模板加载地址 -->
+	<bean id="freemarkerConfig"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="defaultEncoding" value="utf-8"/>
+		<!-- 视图解析器会在/WEB-INF/pages/路径下扫描视图文件 -->
+		<property name="templateLoaderPath" value="/WEB-INF/pages/" />
+		<property name="freemarkerVariables">
+			<map>
+				<entry key="xml_escape" value-ref="fmXmlEscape" />
+			</map>
+		</property>
+	</bean>
+	<bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape" />
+	<!-- 配置freeMarker视图解析器 -->
+	<bean id="freemakerViewResolver"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.freemarker.FreeMarkerView" />
+		<property name="contentType" value="text/html; charset=UTF-8" />
+		<property name="cache" value="true" />
+		<property name="exposeRequestAttributes" value="true" />
+		<property name="exposeSessionAttributes" value="true" />
+		<property name="exposeSpringMacroHelpers" value="true" />
+		<property name="requestContextAttribute" value="request" />
+		<property name="suffix" value=".ftl" />
+	</bean>
+
+	<!-- 定义跳转的文件的前后缀 ，视图模式配置 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!-- 配置前缀和后缀，变成一个 可用的url地址 -->
+		<property name="prefix" value="/WEB-INF/pages/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<!--文件上传 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding" value="utf-8" /><!-- 默认编码格式 -->
+		<property name="maxUploadSize" value="5400000" /><!-- 文件大小最大值 -->
+		<property name="maxInMemorySize" value="4096" /><!-- 内存中的最大值 -->
+	</bean>
+	<!-- 静态资源 -->
+	<mvc:resources mapping="/crossdomain.xml" location="/WEB-INF/crossdomain.xml"
+		cache-period="31536000" />
+</beans>

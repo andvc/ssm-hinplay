@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hinplay.core.dao.MasterManageDao">
+	<!-- 映射结果Map -->
+	<resultMap id="BaseResultMap" type="com.hinplay.core.entity.MasterManage">
+		<id column="wId" property="wid" jdbcType="INTEGER" />
+		<result column="wName" property="wname" jdbcType="VARCHAR" />
+		<result column="wAuthor" property="wauthor" jdbcType="VARCHAR" />
+		<result column="wTime" property="wtime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<!-- 映射结果和BLOB字段Map -->
+	<resultMap id="ResultWithBlobMap" type="com.hinplay.core.entity.MasterManage"
+		extends="BaseResultMap">
+		<result column="wCentent" property="wcentent" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<!-- 查询列 -->
+	<sql id="Base_Column_List">
+		wId, wName, wAuthor, wTime
+	</sql>
+	<!-- 查询Blob字段 -->
+	<sql id="Blob_Column_List">
+		wCentent
+	</sql>
+	<!-- 查询条件 -->
+	<sql id="selectBycolumn">
+		<if test="wid != null">
+			and wId = #{wid,jdbcType=INTEGER}
+		</if>
+		<if test="wname != null">
+			and wName = #{wname,jdbcType=VARCHAR}
+		</if>
+		<if test="wauthor != null">
+			and wAuthor = #{wauthor,jdbcType=VARCHAR}
+		</if>
+	</sql>
+	<sql id="orderBy">
+		<if test="orderBy != null">
+			order by ${orderBy} ASC
+		</if>
+	</sql>
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.hinplay.core.entity.MasterManage">
+		insert into master_manage
+		(wId, wName, wAuthor,
+		wTime, wCentent)
+		values (#{wid,jdbcType=INTEGER},
+		#{wname,jdbcType=VARCHAR},
+		#{wauthor,jdbcType=VARCHAR},
+		#{wtime,jdbcType=TIMESTAMP}, #{wcentent,jdbcType=LONGVARCHAR})
+	</insert>
+	<!-- 新增，判断字段不为空新增 -->
+	<insert id="insertSelective" parameterType="com.hinplay.core.entity.MasterManage">
+		insert into master_manage
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="wid != null">
+				wId,
+			</if>
+			<if test="wname != null">
+				wName,
+			</if>
+			<if test="wauthor != null">
+				wAuthor,
+			</if>
+			<if test="wtime != null">
+				wTime,
+			</if>
+			<if test="wcentent != null">
+				wCentent,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="wid != null">
+				#{wid,jdbcType=INTEGER},
+			</if>
+			<if test="wname != null">
+				#{wname,jdbcType=VARCHAR},
+			</if>
+			<if test="wauthor != null">
+				#{wauthor,jdbcType=VARCHAR},
+			</if>
+			<if test="wtime != null">
+				#{wtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="wcentent != null">
+				#{wcentent,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<!-- 根据主键删除 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		master_manage
+		where wId = #{wid,jdbcType=INTEGER}
+	</delete>
+	<!-- 根据主键批量删除 -->
+	<delete id="deleteBatchByPrimaryKey" parameterType="java.lang.Integer">
+		DELETE FROM master_manage where wId IN
+		<foreach item="item" collection="array" open="(" separator=","
+			close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<!-- 更新，判断字段不为空修改 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.hinplay.core.entity.MasterManage">
+		update master_manage
+		<set>
+			<if test="wname != null">
+				wName = #{wname,jdbcType=VARCHAR},
+			</if>
+			<if test="wauthor != null">
+				wAuthor = #{wauthor,jdbcType=VARCHAR},
+			</if>
+			<if test="wtime != null">
+				wTime = #{wtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="wcentent != null">
+				wCentent = #{wcentent,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where wId = #{wid,jdbcType=INTEGER}
+	</update>
+	<!-- 查询 -->
+	<select id="selectByPrimary" resultMap="BaseResultMap"
+		parameterType="com.hinplay.common.RequestData">
+		select
+		<include refid="Base_Column_List" />
+		FROM master_manage where 1=1
+		<include refid="selectBycolumn" />
+		<include refid="orderBy" />
+	</select>
+	<!-- 查询和查询blob字段 -->
+	<select id="selectWidthBlobByPrimary" resultMap="ResultWithBlobMap"
+		parameterType="com.hinplay.common.RequestData">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		FROM master_manage where 1=1
+		<include refid="selectBycolumn" />
+		<include refid="orderBy" />
+	</select>
+</mapper>

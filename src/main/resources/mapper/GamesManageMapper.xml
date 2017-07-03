@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hinplay.core.dao.GamesManageDao">
+	<!-- 映射结果Map -->
+	<resultMap id="BaseResultMap" type="com.hinplay.core.entity.GamesManage">
+		<id column="gId" property="gid" jdbcType="INTEGER" />
+		<result column="cId" property="cid" jdbcType="INTEGER" />
+		<result column="gName" property="gname" jdbcType="VARCHAR" />
+		<result column="gDesc" property="gdesc" jdbcType="VARCHAR" />
+		<result column="gLogo" property="glogo" jdbcType="VARCHAR" />
+		<result column="gPictures" property="gpictures" jdbcType="VARCHAR" />
+		<result column="gPayType" property="gpaytype" jdbcType="INTEGER" />
+		<result column="gScreen" property="gscreen" jdbcType="INTEGER" />
+		<result column="gPlayed" property="gplayed" jdbcType="INTEGER" />
+		<result column="gState" property="gstate" jdbcType="INTEGER" />
+		<result column="gUrl" property="gurl" jdbcType="VARCHAR" />
+		<result column="gRuntimeUrl" property="gruntimeurl" jdbcType="VARCHAR" />
+		<result column="gFirm" property="gfirm" jdbcType="INTEGER" />
+		<result column="gCreate" property="gcreate" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<!-- 映射结果和分类表Map -->
+	<resultMap id="ResultWithClassMap" type="com.hinplay.core.entity.GamesManage"
+		extends="BaseResultMap">
+		<collection property="gClass" javaType="com.hinplay.core.entity.GameClass">
+			<result column="cName" property="cname" jdbcType="VARCHAR" />
+		</collection>
+	</resultMap>
+	<!-- 查询列 -->
+	<sql id="Base_Column_List">
+		a.gId, a.cId, a.gName, a.gDesc, a.gLogo, a.gPictures,
+		a.gPayType, a.gScreen, a.gPlayed, a.gState, a.gUrl,
+		a.gRuntimeUrl,
+		a.gFirm, a.gCreate
+	</sql>
+	<!-- 查询条件 -->
+	<sql id="selectBycolumn">
+		<if test="gid != null">
+			and a.gId = #{gid,jdbcType=INTEGER}
+		</if>
+		<if test="cid != null">
+			and a.cId = #{cid,jdbcType=INTEGER}
+		</if>
+		<if test="gname != null">
+			and a.gName = #{gname,jdbcType=VARCHAR}
+		</if>
+		<if test="gpaytype != null">
+			and a.gPayType =
+			#{gpaytype,jdbcType=INTEGER}
+		</if>
+		<if test="gscreen != null">
+			and a.gScreen =
+			#{gscreen,jdbcType=INTEGER}
+		</if>
+		<if test="gplayed != null">
+			and a.gPlayed =
+			#{gplayed,jdbcType=INTEGER}
+		</if>
+		<if test="gstate != null">
+			and a.gState = #{gstate,jdbcType=INTEGER}
+		</if>
+		<if test="gfirm != null">
+			and a.gFirm = #{gfirm,jdbcType=INTEGER}
+		</if>
+		<if test="gcreate != null">
+			and a.gCreate = #{gcreate,jdbcType=TIMESTAMP}
+		</if>
+	</sql>
+	<sql id="orderBy">
+		<if test="orderBy != null">
+			order by a.${orderBy} ASC
+		</if>
+	</sql>
+	<sql id="selectSetByKey">
+		<!-- 根据 查询 集合里对应记录 -->
+		<if test="findIn != null">
+			and a.gId IN
+			<foreach collection="findIn" item="item" index="index" open="("
+				separator="," close=")">
+				${item}
+			</foreach>
+		</if>
+	</sql>
+	<sql id="selectByhazy">
+		<!-- 模糊查询 key为fSearch值为gName LIKE '% %' -->
+		<if test="hazyName != null and hazyValue != null">
+			and a.${hazyName} LIKE '%${hazyValue}%'
+		</if>
+	</sql>
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.hinplay.core.entity.GamesManage">
+		insert into games_manage (gId,
+		cId, gName,
+		gDesc, gLogo, gPictures,
+		gPayType, gScreen, gPlayed,
+		gState,
+		gUrl, gRuntimeUrl,
+		gFirm, gCreate)
+		values (#{gid,jdbcType=INTEGER},
+		#{cid,jdbcType=INTEGER},
+		#{gname,jdbcType=VARCHAR},
+		#{gdesc,jdbcType=VARCHAR}, #{glogo,jdbcType=VARCHAR},
+		#{gpictures,jdbcType=VARCHAR},
+		#{gpaytype,jdbcType=INTEGER},
+		#{gscreen,jdbcType=INTEGER},
+		#{gplayed,jdbcType=INTEGER},
+		#{gstate,jdbcType=INTEGER}, #{gurl,jdbcType=VARCHAR},
+		#{gruntimeurl,jdbcType=VARCHAR},
+		#{gfirm,jdbcType=INTEGER},
+		#{gcreate,jdbcType=TIMESTAMP})
+	</insert>
+	<!-- 更新，判断字段不为空修改 -->
+	<insert id="insertSelective" parameterType="com.hinplay.core.entity.GamesManage">
+		<!-- 获取数据库中自增长Id的值 -->
+		<selectKey keyProperty="gid" resultType="java.lang.Integer">
+			select
+			LAST_INSERT_ID()
+		</selectKey>
+		insert into games_manage
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="gid != null">
+				gId,
+			</if>
+			<if test="cid != null">
+				cId,
+			</if>
+			<if test="gname != null">
+				gName,
+			</if>
+			<if test="gdesc != null">
+				gDesc,
+			</if>
+			<if test="glogo != null">
+				gLogo,
+			</if>
+			<if test="gpictures != null">
+				gPictures,
+			</if>
+			<if test="gpaytype != null">
+				gPayType,
+			</if>
+			<if test="gscreen != null">
+				gScreen,
+			</if>
+			<if test="gplayed != null">
+				gPlayed,
+			</if>
+			<if test="gstate != null">
+				gState,
+			</if>
+			<if test="gurl != null">
+				gUrl,
+			</if>
+			<if test="gruntimeurl != null">
+				gRuntimeUrl,
+			</if>
+			<if test="gfirm != null">
+				gFirm,
+			</if>
+			<if test="gcreate != null">
+				gCreate,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="gid != null">
+				#{gid,jdbcType=INTEGER},
+			</if>
+			<if test="cid != null">
+				#{cid,jdbcType=INTEGER},
+			</if>
+			<if test="gname != null">
+				#{gname,jdbcType=VARCHAR},
+			</if>
+			<if test="gdesc != null">
+				#{gdesc,jdbcType=VARCHAR},
+			</if>
+			<if test="glogo != null">
+				#{glogo,jdbcType=VARCHAR},
+			</if>
+			<if test="gpictures != null">
+				#{gpictures,jdbcType=VARCHAR},
+			</if>
+			<if test="gpaytype != null">
+				#{gpaytype,jdbcType=INTEGER},
+			</if>
+			<if test="gscreen != null">
+				#{gscreen,jdbcType=INTEGER},
+			</if>
+			<if test="gplayed != null">
+				#{gplayed,jdbcType=INTEGER},
+			</if>
+			<if test="gstate != null">
+				#{gstate,jdbcType=INTEGER},
+			</if>
+			<if test="gurl != null">
+				#{gurl,jdbcType=VARCHAR},
+			</if>
+			<if test="gruntimeurl != null">
+				#{gruntimeurl,jdbcType=VARCHAR},
+			</if>
+			<if test="gfirm != null">
+				#{gfirm,jdbcType=INTEGER},
+			</if>
+			<if test="gcreate != null">
+				#{gcreate,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<!-- 根据主键删除 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		games_manage
+		where gId = #{gid,jdbcType=INTEGER}
+	</delete>
+
+	<!-- 根据主键批量删除 -->
+	<delete id="deleteBatchByPrimaryKey" parameterType="java.lang.Integer">
+		DELETE FROM
+		games_manage where gId IN
+		<foreach item="item" collection="array" open="(" separator=","
+			close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<!-- 更新，判断字段不为空修改 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.hinplay.core.entity.GamesManage">
+		update games_manage
+		<set>
+			<if test="cid != null">
+				cId = #{cid,jdbcType=INTEGER},
+			</if>
+			<if test="gname != null">
+				gName = #{gname,jdbcType=VARCHAR},
+			</if>
+			<if test="gdesc != null">
+				gDesc = #{gdesc,jdbcType=VARCHAR},
+			</if>
+			<if test="glogo != null">
+				gLogo = #{glogo,jdbcType=VARCHAR},
+			</if>
+			<if test="gpictures != null">
+				gPictures = #{gpictures,jdbcType=VARCHAR},
+			</if>
+			<if test="gpaytype != null">
+				gPayType = #{gpaytype,jdbcType=INTEGER},
+			</if>
+			<if test="gscreen != null">
+				gScreen = #{gscreen,jdbcType=INTEGER},
+			</if>
+			<if test="gplayed != null">
+				gPlayed = #{gplayed,jdbcType=INTEGER},
+			</if>
+			<if test="gstate != null">
+				gState = #{gstate,jdbcType=INTEGER},
+			</if>
+			<if test="gurl != null">
+				gUrl = #{gurl,jdbcType=VARCHAR},
+			</if>
+			<if test="gruntimeurl != null">
+				gRuntimeUrl = #{gruntimeurl,jdbcType=VARCHAR},
+			</if>
+			<if test="gfirm != null">
+				gFirm = #{gfirm,jdbcType=INTEGER},
+			</if>
+			<if test="gcreate != null">
+				gCreate = #{gcreate,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where gId = #{gid,jdbcType=INTEGER}
+	</update>
+	<!-- 查询 -->
+	<select id="selectByPrimary" resultMap="BaseResultMap"
+		parameterType="com.hinplay.common.RequestData">
+		select
+		<include refid="Base_Column_List" />
+		FROM games_manage as a where 1=1
+		<include refid="selectBycolumn" />
+		<include refid="selectSetByKey" />
+		<include refid="selectByhazy" />
+		<include refid="orderBy" />
+	</select>
+	<!-- 查询以及查询分类表 -->
+	<select id="selectWithClassByPrimary" resultMap="ResultWithClassMap"
+		parameterType="com.hinplay.common.RequestData">
+		SELECT
+		<include refid="Base_Column_List" />
+		,
+		b.cName
+		FROM
+		games_manage AS a
+		LEFT JOIN
+		game_class AS b
+		ON
+		a.cId=b.cId
+		where 1=1
+		<include refid="selectBycolumn" />
+		<include refid="selectSetByKey" />
+		<include refid="selectByhazy" />
+		<include refid="orderBy" />
+	</select>
+</mapper>

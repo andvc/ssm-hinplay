@@ -1,0 +1,264 @@
+/*****
+ * www.hinplay.com
+ * Copyright 2015 hinplay, Inc.
+*****/
+
+@charset "utf-8";
+html,body{
+	width: 100%;
+	height: 100%;
+}
+.dialog-uploadImg{
+	/*position: fixed;
+	left: 50%;
+	top: 50%;
+	margin-top: -265px;
+	margin-left: -425px;*/
+	position: relative;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+/*.dialog-uploadImg .dialog-title{
+	position: relative;
+	padding: 0 15px;
+	height: 35px;
+    background: #F1F8FD;
+    background: -moz-linear-gradient(top, #F1F8FD, #DAE8F6);
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#F1F8FD), to(#DAE8F6));
+}
+.dialog-uploadImg .dialog-title h2{
+	line-height: 35px;
+	font-size: 12px;
+	color: #386790;
+	font-weight: normal;
+}
+.dialog-uploadImg .dialog-title .dialog-close{
+	position: absolute;
+	top: 50%;
+	right: 15px;
+	margin-top: -6px;
+	width: 12px;
+	height: 12px;
+	background: url(../imgs/spr_icon.png) no-repeat;
+	background-position: 0 -273px;
+	text-indent: -99999px;
+}*/
+.dialog-uploadImg .dialog-uploadArea{
+	padding: 10px 15px;
+    border-top: 1px solid #DBE8F2;
+    border-bottom: 1px solid #DBE8F2;
+	overflow: hidden;
+}
+.dialog-uploadImg .dialog-uploadArea #dialogUpload{
+	position: relative;
+	float: right;
+}
+.dialog-uploadImg .dialog-uploadArea #dialogUpload-button{
+	height: 25px;
+    height: 27px\9;
+    text-align: center;
+    font-family: "\5B8B\4F53";
+    border: 1px solid #FFF;
+    border: 1px solid #A3C3E6\9;
+    background: #EBF2F9;
+    background: -moz-linear-gradient(top, #FFF, #EBF2F9);
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFF), to(#EBF2F9));
+    -moz-box-shadow: 0 0 0 1px #A3C3E6;
+    -webkit-box-shadow: 0 0 0 1px #A3C3E6;
+    box-shadow: 0 0 0 1px #A3C3E6;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -o-border-radius: 3px;
+    cursor: pointer;
+}
+.dialog-uploadImg .dialog-imgBox{
+	position: absolute;
+	top: 57px;
+	left: 0;
+	right: 10px;
+	bottom: 0;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+.dialog-uploadImg .uploadProgress{
+	position: absolute;
+	top: 45px;
+	right: 15px;
+	z-index: 20;
+	background: #fff;
+}
+.dialog-uploadImg .uploadProgress .uploadify-queue-item{
+	position: relative;
+	margin: -1px auto;
+	padding: 0 15px;
+	width: 450px;
+	height: 45px;
+	font-size: 12px;
+	border: 1px solid #DBE8F2;
+}
+.dialog-uploadImg .uploadProgress .fileName{
+	float: left;
+	height: 30px;
+	line-height: 30px;
+}
+.dialog-uploadImg .uploadProgress .data{
+	float: left;
+	margin-left: 15px;
+	height: 30px;
+	line-height: 30px;
+	/*margin-top: 11px;
+	width: 12px;
+	height: 12px;*/
+	/*background: url(../imgs/spr_icon.png) no-repeat;*/
+	/*background-position: 0 -383px;*/
+	/*text-indent: -99999px;*/
+}
+.dialog-uploadImg .uploadProgress .cancel{
+	position: absolute;
+	top: 9px;
+	right: 15px;
+	width: 12px;
+	height: 12px;
+	background: url(../imgs/spr_icon.png) no-repeat;
+	background-position: 0 -273px;
+	text-indent: -99999px;
+	display: none
+}
+.dialog-uploadImg .uploadProgress .cancel>a{
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+.dialog-uploadImg .uploadProgress .uploadify-progress{
+	position: absolute;
+	top: 32px;
+	width: 450px;
+	height: 3px;
+	background: #fff;
+}
+.dialog-uploadImg .uploadProgress .uploadify-progress-bar{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background: #5aa1dd;
+}
+.dialog-uploadImg .dialog-imgBox li{
+	position: relative;
+	float: left;
+	margin-left: 10px;
+	margin-bottom: 10px;
+	height: 160px;
+	width: 125px;
+	border: 1px solid #DBE8F2;
+	cursor: pointer;
+}
+.dialog-uploadImg .dialog-imgBox .select{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	-o-appearance: none;
+	-ms-appearance: none;
+	background-image: none;
+	cursor: pointer;
+}
+.dialog-uploadImg .dialog-imgBox .select:checked:after{
+	position: absolute;
+	width: 100%;
+	height: 130px;
+	display: block;
+	content: '';
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAkFBMVEUAAAD///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////+WABnwAAAAL3RSTlMA+bMFAtarGRIK0crDu4UWDgf18u/r5+Hboph6aEU9NjEqJR7ev49xXlZNIKSQdOzLhGUAAAEFSURBVEjH7ZRJEoIwEEVbcMAJFGcFZxnV3P92Fj9FBZRgrywXvF1+XgXS3UANP8a5HYhPryNme7adXoUQrs+0zyuRYfDs01LaU5Z9XMDumiz7MIe9abPs/Qz2llj4LuyAZyct2DbPjqW949mRtMNiZtm6O3sCeOVp0FU0hNyKitllrevXTtpxKbwhHPc/bFvaCQF1OuLR5M0OELt+xSRnDK1i2N4irBpxZ4CtgVOwN4jmlR+QNcRmp5cHZhfB4kiVTEbYXl8ITA0slyfS0B9DWJ3LCy3qwPxR15T0qNdVF6lBFUOVqQZV6rwJ33kIgBZzsEU+QDwwhAZsFk/8Tvh4d5Ma/o4XVc0vu5vEV90AAAAASUVORK5CYII=);
+	background-repeat: no-repeat;
+	background-position: center 42px;
+	background-size: 46px 46px;
+	-webkit-background-size: 46px 46px;
+}
+.dialog-uploadImg .dialog-imgBox .select:checked:before{
+	position: absolute;
+	width: 100%;
+	height: 130px;
+	display: block;
+	content: '';
+    opacity: .6;
+    background-color: #000;
+}
+.dialog-uploadImg .dialog-imgBox .pic{
+	height: 130px;
+	overflow: hidden;
+}
+.dialog-uploadImg .dialog-imgBox .iName{
+	padding: 0 10px;
+	height: 30px;
+	line-height: 30px;
+	font-size: 14px;
+}
+.dialog-uploadImg .dialog-imgBox img{
+	width: 100%;
+}
+/*.dialog-uploadImg .dialog-foot{
+	border-top: 1px solid #DBE8F2;
+	text-align: center;
+	padding: 12px 0;
+	background: #EAEFF8;
+}
+.dialog-uploadImg .dialog-foot>button{
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+	margin: 0 10px;
+}*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

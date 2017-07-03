@@ -66,7 +66,7 @@ public class PictureController {
 	}
 
 	// 选择（添加）
-	@RequestMapping("website/admin/picture/pictureSelect.action")
+	@RequestMapping("website/admin/picture/select")
 	public String adminPictureSelect(@RequestParam(defaultValue = "radio") String type, Model m) {
 		try {
 			List<PictureManage> list = pService.selectByShow();
